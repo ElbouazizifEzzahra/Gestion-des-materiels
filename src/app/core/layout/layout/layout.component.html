@@ -1,0 +1,93 @@
+
+<div class="flex h-screen bg-gray-50">
+  <aside [class]="isSidebarOpen ? 'w-64' : 'w-20'" class="bg-red-700 text-white transition-all duration-300 ease-in-out">
+    <div class="p-4 flex items-center justify-between border-b border-red-600">
+      @if (isSidebarOpen) {
+      <h2 class="text-xl font-bold">Admin</h2>
+      }
+      <button (click)="toggleSidebar()" class="p-1 rounded-full hover:bg-red-600">
+        @if (isSidebarOpen) {
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        }
+      </button>
+    </div>
+
+    <nav class="mt-6">
+      <ul class="space-y-2 px-4">
+        <li>
+          <a [routerLink]="['materiels']"  routerLinkActive="bg-red-800"
+             class="flex items-center p-3 rounded-lg hover:bg-red-600 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+            @if (isSidebarOpen) {
+            <span class="ml-3">Matériels</span>
+            }
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['demandes']"  routerLinkActive="bg-red-800"
+             class="flex items-center p-3 rounded-lg hover:bg-red-600 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            @if (isSidebarOpen) {
+            <span class="ml-3">Demandes</span>
+            }
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['users']" routerLinkActive="bg-red-800"
+             class="flex items-center p-3 rounded-lg hover:bg-red-600 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            @if (isSidebarOpen) {
+            <span class="ml-3">Utilisateurs</span>
+            }
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+
+
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <app-navbar></app-navbar>
+
+  <!--  <header class="bg-white shadow-sm">
+      <div class="flex items-center justify-between p-4">
+        <div class="flex items-center">
+          <button (click)="toggleSidebar()" class="p-2 mr-2 rounded-md hover:bg-gray-100">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h1 class="text-xl font-semibold text-gray-800">Gestion des matériels</h1>
+        </div>
+
+        <div class="flex items-center space-x-4">
+
+
+
+          <div class="h-10 w-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold">
+            {{ currentUser.name ? currentUser.name : 'U' }}
+          </div>
+        </div>
+      </div>
+    </header>-->
+
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+
+

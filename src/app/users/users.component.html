@@ -1,0 +1,295 @@
+<!--<app-layout>-->
+<div class="container mx-auto px-4 py-8">
+  <!-- En-tête avec titre et actions -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-800">Gestion des Utilisateurs</h1>
+      <p class="text-gray-600">Liste complète des utilisateurs enregistrés</p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+      <!-- Barre de recherche  -->
+      <div class="relative flex-grow">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <input type="text"
+               [(ngModel)]="searchTerm"
+               (input)="filterMateriels()"
+               placeholder="Rechercher un utilisateur..."
+               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+
+      <!-- Bouton d'ajout -->
+      <button (click)="openAddForm()"
+              class="flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors shadow-sm">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+        Ajouter
+      </button>
+    </div>
+  </div>
+
+  <!-- Tableau responsive -->
+  <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prénom</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Site</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Societe</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Projet</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fonction</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Téléphone</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code</th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+        @for (user of users; track user.id) {
+        <tr class="hover:bg-gray-50 transition-colors">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ user.id }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.nom }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.prenom }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.email }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+        {{ user.role === 'ADMIN' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+        {{ user.role }}
+        </span>
+      </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.site }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.societe }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.projet}}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.fonctionalite}}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.numeroTelephone }}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.code }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <div class="flex space-x-2">
+                <button (click)="openEditModal(user)"
+                        class="text-indigo-600 hover:text-indigo-900 p-1 rounded-md hover:bg-indigo-50 transition-colors"
+                        title="Modifier">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                </button>
+                <button (click)="deleteUser(user.id)"
+                        class="text-red-600 hover:text-red-900 p-1 rounded-md hover:bg-red-50 transition-colors"
+                        title="Supprimer">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+
+              </div>
+            </td>
+          </tr>
+        }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="mt-4 flex items-center justify-between">
+    <div class="text-sm text-gray-500">
+      Affichage de <span class="font-medium">{{ users.length }}</span> utilisateurs
+    </div>
+    <div class="flex space-x-2">
+      <button class="px-3 py-1 border rounded-md text-sm font-medium text-gray-700 bg-red-700 hover:bg-gray-50">
+        Précédent
+      </button>
+      <button class="px-3 py-1 border rounded-md text-sm font-medium text-white bg-red-600 hover:bg-blue-700">
+        1
+      </button>
+      <button class="px-3 py-1 border rounded-md text-sm font-medium text-red-600-700 bg-white hover:bg-gray-50">
+        Suivant
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal d'ajout -->
+@if (showForm) {
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+<div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+<div class="p-6">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-xl font-semibold text-gray-800">Nouvel Utilisateur</h3>
+<button (click)="cancelForm()" class="text-gray-400 hover:text-gray-500">
+<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+</svg>
+</button>
+</div>
+
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
+<input formControlName="nom" type="text" required
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Prénom *</label>
+<input formControlName="prenom" type="text" required
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+<input formControlName="email" type="email" required
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Rôle *</label>
+<select formControlName="role"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+<option value="ADMIN">Admin</option>
+<option value="E">Utilisateur</option>
+<option value="ESI">Utilisateur SI</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+<input formControlName="numeroTelephone" type="tel"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Code</label>
+<input formControlName="code" type="text"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Société</label>
+<input formControlName="societe" type="text"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Projet</label>
+<input formControlName="projet" type="text"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Site</label>
+<input formControlName="site" type="text"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Fonction</label>
+<input formControlName="fonctionalite" type="text"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+</div>
+
+<div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+<button type="button" (click)="cancelForm()"
+class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+Annuler
+</button>
+<button type="submit" [disabled]="!userForm.valid"
+class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed">
+Enregistrer
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+}
+
+<!-- Modal de modification -->
+@if (showEditModal()) {
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+<div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+<div class="p-6">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-xl font-semibold text-gray-800">Modifier Utilisateur</h3>
+<button (click)="showEditModal.set(false)" class="text-gray-400 hover:text-gray-500">
+<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+</svg>
+</button>
+</div>
+
+<div class="space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
+<input [(ngModel)]="editForm().nom" type="text" required
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Prénom *</label>
+<input [(ngModel)]="editForm().prenom" type="text" required
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+<input [(ngModel)]="editForm().email" type="email" required
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Rôle *</label>
+<select [(ngModel)]="editForm().role"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+<option value="ADMIN">Admin</option>
+<option value="E">Utilisateur</option>
+<option value="ESI">Utilisateur SI</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+<input [(ngModel)]="editForm().numeroTelephone" type="tel"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Code</label>
+<input [(ngModel)]="editForm().code" type="text"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Société</label>
+<input [(ngModel)]="editForm().societe" type="text"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Projet</label>
+<input [(ngModel)]="editForm().projet" type="text"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Site</label>
+<input [(ngModel)]="editForm().site" type="text"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1">Fonction</label>
+<input [(ngModel)]="editForm().fonctionalite" type="text"
+class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+</div>
+</div>
+
+<div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+<button (click)="showEditModal.set(false)"
+class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+Annuler
+</button>
+<button (click)="updateUser()"
+class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+Enregistrer
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+}
+<!--</app-layout>-->
