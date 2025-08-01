@@ -16,5 +16,5 @@ public class UserRequestDTO {
     private String site;
     private String password;
     private String role;
-private String projet;
+    private String projet;
 }

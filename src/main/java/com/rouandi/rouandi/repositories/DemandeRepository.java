@@ -37,7 +37,7 @@ public interface DemandeRepository extends JpaRepository<Demande,Long> {
     @Query("UPDATE Demande d SET d.etat = :etat WHERE d.idDemande = :id")
     void updateEtatById(@Param("id") Long id, @Param("etat") Etat etat);
     boolean existsDemandeByIdDemande(Long id);
-    @Query("SELECT d FROM Demande d JOIN d.ligneDmandes l WHERE l.destinataire.id = :id")
+    @Query("SELECT d FROM Demande d JOIN d.ligneDemandes l WHERE l.destinataire.id = :id")
     List<Demande> findDemandesByDestinataireId(@Param("id") Long id);
 
 

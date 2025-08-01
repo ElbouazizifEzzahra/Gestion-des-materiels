@@ -27,7 +27,7 @@ public class Demande {
 
     @OneToMany(mappedBy = "demande",cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<LigneDemande> ligneDmandes = new ArrayList<>();
+    private List<LigneDemande> ligneDemandes = new ArrayList<>();
     @ManyToOne(cascade = CascadeType.REMOVE)
     private User createur;
 

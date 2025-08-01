@@ -1,5 +1,6 @@
 package com.rouandi.rouandi.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -21,7 +22,7 @@ public class Materiel {
     private String typeMateriel;
     private String nomMateriel;
     @OneToMany(mappedBy = "materiel", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<LigneDemande> ligneDmandes = new ArrayList<>();
+    @JsonBackReference
+    private List<LigneDemande> ligneDemandes = new ArrayList<>();
 
 }

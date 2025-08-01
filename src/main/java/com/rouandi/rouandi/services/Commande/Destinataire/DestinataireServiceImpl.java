@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 public class DestinataireServiceImpl implements DestinataireService{
     private DestinataireRepository destinataireRepository;
     @Override
-    public void supprimerDestinataire(Destinataire destinataire) {
-        if(destinataireRepository.existsDestinataireByEmail(destinataire.getEmail()))
-            destinataireRepository.deleteDestinataireById(destinataire.getId());
+    public void supprimerDestinataireParId(Long id) {
+        destinataireRepository.deleteById(id);
     }
+
 }

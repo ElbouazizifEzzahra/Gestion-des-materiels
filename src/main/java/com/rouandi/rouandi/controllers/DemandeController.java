@@ -9,6 +9,7 @@ import com.rouandi.rouandi.services.Query.Demande.DemandeQueryServiceImp;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.sql.Time;
@@ -19,6 +20,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/demandes")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class DemandeController {
 
      private final DemandeServiceImpl demandeService;
@@ -27,13 +29,13 @@ public class DemandeController {
 
 
 
-    //@PreAuthorize("hasAuthority('ROLE_E')")
+    @PreAuthorize("hasAuthority('E')")
     @PostMapping("/add")
     public ResponseEntity<Demande> ajouterDemande(@RequestBody Demande demande) {
         Demande saved = demandeService.addDemande(demande);
         return ResponseEntity.ok(saved);
     }
-    @GetMapping("/demandes/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<List<Demande>>demandes(@PathVariable Long id){
         return ResponseEntity.ok( demandeQueryServiceImp.demandesByUser(id));
     }
@@ -47,12 +49,19 @@ public class DemandeController {
         List<Demande>demades=demandeQueryServiceImp.filterDemande(etat,date,time,createurId);
         return ResponseEntity.ok(demades);
     }
-    @PatchMapping("/Update-Etat")
-    public ResponseEntity<?>update(@RequestParam Long id,@RequestParam Etat etat){
+
+    @PreAuthorize("hasAuthority('ESI')")
+    @PatchMapping("/Update-Etat/{id}")
+    public ResponseEntity<?>update(@PathVariable Long id,@RequestParam Etat etat){
         demandeService.update(id,etat);
         return ResponseEntity.ok(Map.of("message","mise a jour avec succes")) ;
 
     }
 
+    @GetMapping("/demandes")
+    public ResponseEntity<List<Demande>>demandes(){
+        List<Demande>demades=demandeQueryServiceImp.demandes();
+        return ResponseEntity.ok(demades);
+    }
 
 }

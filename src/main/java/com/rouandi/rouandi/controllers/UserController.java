@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
     private UserService userService;
     private UserServiceQuery userServiceQuery;
@@ -33,13 +35,13 @@ public class UserController {
       User saved=userService.addUser(user);
         return ResponseEntity.ok(UserMapper.toDTO(saved));
     }
-    @PostMapping("/users")
+    @GetMapping("/users")
     public ResponseEntity<List>AllUsers(){
      return  ResponseEntity.ok(userServiceQuery.users());
     }
 
-    @PostMapping("/filterByRole")
-    public ResponseEntity<List>filterByRole(Role role){
+    @GetMapping("/filterByRole/{role}")
+    public ResponseEntity<List>filterByRole(@PathVariable Role role){
         return  ResponseEntity.ok(userServiceQuery.filterByRole(role));
     }
     @DeleteMapping("/delete/{id}")
@@ -47,12 +49,14 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.ok(Map.of("message","bien supprimé"));
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(
+    public ResponseEntity<?> updateUser(
             @PathVariable Long id,
             @RequestBody User updatedUser
-    ) {
+    ) throws AccessDeniedException {
         userService.updateUser(id, updatedUser);
-        return ResponseEntity.ok("Utilisateur mis à jour avec succès !");
+        return ResponseEntity.ok(Map.of("message", "Utilisateur mis à jour avec succès"));
     }
+
     }

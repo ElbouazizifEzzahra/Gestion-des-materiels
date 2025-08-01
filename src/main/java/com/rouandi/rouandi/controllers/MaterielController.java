@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
 
 
 @RestController
 @RequestMapping("/materiel")
+@CrossOrigin(origins = "http://localhost:4200")
 public class MaterielController {
     private MaterielServiceImpl materielService;
     private MaterielMapper materielMapper;
@@ -37,17 +38,33 @@ public class MaterielController {
         materielService.deleteMateriel(id);
         return ResponseEntity.ok(Map.of("message","Matériel supprimé avec succès."));
     }
- @PatchMapping("/update")
-    public ResponseEntity<?>modifier(@RequestParam(required = false) Long id,
-                                    @RequestParam (required = false) String nom,
-                                    @RequestParam (required = false) String type){
-        materielService.updateMateriel(id,nom,type);
-        return ResponseEntity.ok(Map.of("message","bien fait"));
- }
- @GetMapping("/filter")
-    public ResponseEntity<List<Materiel>> filter(@RequestParam (required = false) String type,
-                                                           @RequestParam (required = false) String nom){
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<?> modifier(
+            @PathVariable Long id,
+            @RequestParam(name = "nomMateriel", required = false) String nom,
+            @RequestParam(name = "typeMateriel", required = false) String type) {
+
+        materielService.updateMateriel(id, nom, type);
+        return ResponseEntity.ok(Map.of("message", "bien fait"));
+    }
+
+/* @GetMapping("/filter")
+    public ResponseEntity<List<Materiel>> filter(
+                                                @RequestParam (required = false) String type,
+                                                 @RequestParam (required = false) String nom
+                                                                                                ){
          List<Materiel> materiels=materielQueryService.filter(nom,type);
          return ResponseEntity.ok(materiels) ;
- }
+ }*/
+@GetMapping("/filter")
+public ResponseEntity<List<Materiel>> filter(
+        @RequestParam(required = false) String nom) {
+    List<Materiel> materiels = materielQueryService.filter(nom);
+    return ResponseEntity.ok(materiels);
+}
+    @GetMapping("/materiels")
+    public ResponseEntity<List<MaterielResponseDTO>> getMaterielSimple() {
+        return ResponseEntity.ok(materielQueryService.getMaterielSimpleInfo());
+    }
+
 }

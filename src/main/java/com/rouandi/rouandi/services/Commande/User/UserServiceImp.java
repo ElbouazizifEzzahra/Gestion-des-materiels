@@ -1,27 +1,29 @@
 package com.rouandi.rouandi.services.Commande.User;
 
+import com.rouandi.rouandi.entities.Role;
 import com.rouandi.rouandi.entities.User;
 import com.rouandi.rouandi.repositories.UserRepository;
-import com.rouandi.rouandi.services.Commande.User.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.nio.file.AccessDeniedException;
 import java.util.Random;
 
 @Transactional
 @Service
 public class UserServiceImp implements UserService {
-    private UserRepository userRepository;
+    private final  UserRepository userRepository;
+    @Autowired
     private PasswordEncoder encoder;
     private static final String UPPERCASES ="QWERTYUIOPASDFGHJKLZXCVBNM";
     private static final String LOWERCASES="qwertyuiopasdfghjklzxcvbnm";
-    private static String CHIFFRES="1234567890";
+    private static final String CHIFFRES="1234567890";
     private static final String SYMBOLS="!@#$%^&*()_-+=<>?";
     public static final String ALL_CHARS=UPPERCASES+LOWERCASES+SYMBOLS+CHIFFRES;
 
@@ -53,14 +55,11 @@ public class UserServiceImp implements UserService {
 
     }
 
- /*   @Override
-    public void editUser(Long id) {
-        userRepository.updateUserById(id);
-    }*/
+
 
     public String Password(){
         StringBuilder passwordBuilder= new StringBuilder();
-        int length=15;
+        int length=8;
         Random r = new Random();
         passwordBuilder.append(UPPERCASES.charAt(r.nextInt(UPPERCASES.length())));
         passwordBuilder.append(LOWERCASES.charAt(r.nextInt(LOWERCASES.length())));
@@ -98,7 +97,7 @@ public class UserServiceImp implements UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + email));
     }
-    @Override
+    /*@Override
     @Transactional
     public void updateUser(Long id, User updatedData) {
         User existingUser = userRepository.findById(id)
@@ -136,5 +135,66 @@ public class UserServiceImp implements UserService {
 
         userRepository.save(existingUser);
     }
+*/
+    public User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(Long id, User updatedData) throws AccessDeniedException {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable avec ID : " + id));
+
+        User currentUser = getAuthenticatedUser();
+        boolean isAdmin = currentUser.getRole().equals(Role.ADMIN);
+
+        if (!isAdmin && !currentUser.getId().equals(id)) {
+            throw new AccessDeniedException("Vous ne pouvez modifier que vos propres informations.");
+        }
+
+        if (isAdmin) {
+            if (updatedData.getCode() != null)
+                existingUser.setCode(updatedData.getCode());
+            if (updatedData.getEmail() != null)
+                existingUser.setEmail(updatedData.getEmail());
+            if (updatedData.getFonctionalite() != null)
+                existingUser.setFonctionalite(updatedData.getFonctionalite());
+            if (updatedData.getNom() != null)
+                existingUser.setNom(updatedData.getNom());
+            if (updatedData.getNumeroTelephone() != null)
+                existingUser.setNumeroTelephone(updatedData.getNumeroTelephone());
+            if (updatedData.getPrenom() != null)
+                existingUser.setPrenom(updatedData.getPrenom());
+            if (updatedData.getProjet() != null)
+                existingUser.setProjet(updatedData.getProjet());
+            if (updatedData.getRole() != null)
+                existingUser.setRole(updatedData.getRole());
+            if (updatedData.getSite() != null)
+                existingUser.setSite(updatedData.getSite());
+            if (updatedData.getSociete() != null)
+                existingUser.setSociete(updatedData.getSociete());
+            if (updatedData.getPassword() != null && !updatedData.getPassword().isBlank()) {
+                existingUser.setPassword(encoder.encode(updatedData.getPassword()));
+            }
+        } else if(!isAdmin) {
+            if (updatedData.getNom() != null)
+                existingUser.setNom(updatedData.getNom());
+            if (updatedData.getPrenom() != null)
+                existingUser.setPrenom(updatedData.getPrenom());
+            if (updatedData.getNumeroTelephone() != null)
+                existingUser.setNumeroTelephone(updatedData.getNumeroTelephone());
+            if (updatedData.getPassword() != null && !updatedData.getPassword().isBlank()) {
+                existingUser.setPassword(encoder.encode(updatedData.getPassword()));
+            }
+
+        }
+
+        userRepository.save(existingUser);
+    }
+
 
 }

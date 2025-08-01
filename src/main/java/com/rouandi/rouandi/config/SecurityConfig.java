@@ -2,10 +2,9 @@ package com.rouandi.rouandi.config;
 
 
 import com.rouandi.rouandi.jwt.JwtAuthentificationFilter;
-import com.rouandi.rouandi.services.UtilisateurDetails;
+import com.rouandi.rouandi.services.Commande.User.UtilisateurDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -17,7 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -39,14 +37,17 @@ public class SecurityConfig  {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
+                        /*.requestMatchers("/demandes/**").hasAnyAuthority("ADMIN","ESI","E")*/
                         .requestMatchers("/demandes/**").permitAll()
                         .requestMatchers("/materiel/**").permitAll()
+                        //.requestMatchers("/materiel/**").hasAuthority("ADMIN")
+                       // .requestMatchers("/user/**").hasAuthority("ADMIN")
                         .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/lignes-demandes/**").permitAll()
-                        .requestMatchers("/destinataire/**").permitAll()
-                        .requestMatchers("/auth/si/**").hasAuthority("ROLE_ESI")
+                        .requestMatchers("/lignes-demandes/**").hasAuthority("E")
+                        .requestMatchers("/destinataire/**").hasAuthority("ADMIN")
+                        /*.requestMatchers("/auth/si/**").hasAuthority("ROLE_ESI")
                         .requestMatchers("/auth/user/**").hasAuthority("ROLE_E")
-                        .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN")*/
 
                         .anyRequest().authenticated()
 

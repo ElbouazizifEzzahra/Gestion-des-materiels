@@ -4,6 +4,9 @@ import com.rouandi.rouandi.entities.Materiel;
 import com.rouandi.rouandi.repositories.MaterielRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
 @Transactional
 @Service
 public class MaterielServiceImpl implements MaterielService {
@@ -26,14 +29,38 @@ public class MaterielServiceImpl implements MaterielService {
 
     @Override
     public void deleteMateriel(Long id) {
-        if(materielRepository.existsMaterielByIdMateriel(id))
+        if (materielRepository.existsMaterielByIdMateriel(id))
             materielRepository.deleteMaterielByIdMateriel(id);
         else
             System.out.println("le materiel n'existe pas ");
 
     }
+
     @Override
-    public void updateMateriel(Long id, String type, String nom) {
+    public Materiel updateMateriel(Long id, String nom, String type) {
+        Optional<Materiel> optionalMateriel = materielRepository.findById(id);
+
+        if (optionalMateriel.isPresent()) {
+            Materiel materiel = optionalMateriel.get();
+
+            if (nom != null) {
+                materiel.setNomMateriel(nom);
+            }
+            if (type != null) {
+                materiel.setTypeMateriel(type);
+            }
+
+            // Sauvegarde et retourne l'objet mis à jour
+            return materielRepository.save(materiel);
+        }
+
+        // Si l'objet n'existe pas, on peut soit :
+        // - lever une exception (recommandé)
+        // - soit retourner null (moins conseillé)
+        throw new RuntimeException("Le matériel avec l'ID " + id + " n'existe pas.");
+    }
+
+ /*   public void updateMateriel(Long id, String nom, String type) {
 
         if(materielRepository.existsMaterielByIdMateriel(id))
         {
@@ -45,5 +72,5 @@ public class MaterielServiceImpl implements MaterielService {
             if(nom!=null)
                 materielRepository.updateMaterielByIdAndNomMateriel(id,nom);
         }
+    }*/
     }
-}

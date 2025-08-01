@@ -9,7 +9,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MaterielResponseDTO {
+    private  Long idMateriel;
     private String nomMateriel;
     private String typeMateriel;
-    private List<LigneDemande> ligneDmandes;
+
 }

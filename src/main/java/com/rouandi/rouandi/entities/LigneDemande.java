@@ -2,6 +2,7 @@ package com.rouandi.rouandi.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class LigneDemande {
     @JsonBackReference
     private Demande demande;
     @ManyToOne
-    @JsonBackReference
+    @JsonManagedReference
     private Materiel materiel;
     private String ficheTechnique;
     private int quantite;

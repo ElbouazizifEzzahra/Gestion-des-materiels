@@ -7,6 +7,7 @@ public class MaterielMapper {
         MaterielResponseDTO dto = new MaterielResponseDTO();
         dto.setNomMateriel(materiel.getNomMateriel());
         dto.setTypeMateriel(materiel.getTypeMateriel());
+        dto.setIdMateriel(materiel.getIdMateriel());
         return dto;
     }
     public static Materiel fromDTO(MaterielRequestDTO  materielRequestDTO){

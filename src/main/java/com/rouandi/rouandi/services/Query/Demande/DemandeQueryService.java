@@ -10,7 +10,9 @@ import java.util.List;
 
 public interface DemandeQueryService {
     List<Demande>demandesByUser(Long id);
+
     List <Demande>filterDemande(Etat etat, Date date, Time time,Long id);
+    List <Demande>demandes();
 
 
 }

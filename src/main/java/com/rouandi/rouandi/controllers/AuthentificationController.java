@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin("http://localhost:4200")
 public class AuthentificationController {
     private AuthService authService;
 
@@ -19,5 +20,6 @@ public class AuthentificationController {
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
         return authService.login(request);
     }
+
 
 }

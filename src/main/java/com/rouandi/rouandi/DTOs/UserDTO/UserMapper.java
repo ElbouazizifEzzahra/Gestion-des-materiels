@@ -16,6 +16,10 @@ public class UserMapper {
         if (user.getRole() != null) {
             userResponseDTO.setRole(user.getRole().name());
         }
+        userResponseDTO.setCode(user.getCode());
+        userResponseDTO.setProjet(user.getProjet());
+        userResponseDTO.setSite(user.getSite());
+        userResponseDTO.setSociete(user.getSociete());
 
         return userResponseDTO;
     }
@@ -34,6 +38,11 @@ public class UserMapper {
                 throw new RuntimeException("Rôle invalide : " + userRequestDTO.getRole());
             }
         }
+        user.setCode(userRequestDTO.getCode());
+        user.setProjet(userRequestDTO.getProjet());
+        user.setSite(userRequestDTO.getSite());
+        user.setSociete(userRequestDTO.getSociete());
+
         return user;
     }
 

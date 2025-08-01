@@ -15,6 +15,11 @@ public class UserResponseDTO {
     private String numeroTelephone;
     private String fonctionalite;
     private String role;
+    private String societe;
+    private String site;
+    private String projet;
+    private String code;
+
 
 
 }

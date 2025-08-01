@@ -15,13 +15,13 @@ import java.util.Optional;
 @Repository
 public interface MaterielRepository extends JpaRepository<Materiel,Long> {
 
- /*   void deleteMaterielByIdMateriel(Long id);
-    void updateMaterielById(Long id);*/
+
+ List<Materiel> findByNomMaterielStartingWithIgnoreCase(String prefix);
     List<Materiel> findMaterielByNomMaterielAndTypeMateriel(String nom,String type );
     void deleteMaterielByIdMateriel(Long id);
     boolean existsMaterielByIdMateriel(Long id);
     Optional<Materiel> findByNomMaterielAndTypeMateriel(String nom, String type);
-
+    Optional<Materiel> findByIdMateriel(Long id);
    List<Materiel>findMaterielByNomMateriel(String nom);
  List<Materiel> findMaterielByTypeMateriel(String type);
     @Modifying

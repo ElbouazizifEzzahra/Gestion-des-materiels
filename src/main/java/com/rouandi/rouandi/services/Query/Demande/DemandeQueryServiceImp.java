@@ -25,6 +25,11 @@ public class DemandeQueryServiceImp implements DemandeQueryService {
 
     @Override
     public List<Demande> filterDemande(Etat etat, Date date, Time time, Long createurId) {
+        System.out.println(">>> createurId = " + createurId);
+        System.out.println(">>> etat = " + etat);
+        System.out.println(">>> date = " + date);
+        System.out.println(">>> time = " + time);
+
         if (createurId != null && etat != null) {
             return demandeRepository.findByCreateur_IdAndEtat(createurId, etat)
                     .stream()
@@ -50,6 +55,11 @@ public class DemandeQueryServiceImp implements DemandeQueryService {
             return demandeRepository.findByEtat(etat);
         }
     else
+        return demandeRepository.findAll();
+    }
+
+    @Override
+    public List<Demande> demandes() {
         return demandeRepository.findAll();
     }
 
