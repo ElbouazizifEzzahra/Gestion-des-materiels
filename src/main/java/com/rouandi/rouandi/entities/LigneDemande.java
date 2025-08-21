@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -19,9 +20,11 @@ public class LigneDemande {
 
     @ManyToOne
     @JsonBackReference
+    @ToString.Exclude
     private Demande demande;
     @ManyToOne
     @JsonManagedReference
+    @ToString.Exclude
     private Materiel materiel;
     private String ficheTechnique;
     private int quantite;
@@ -29,5 +32,11 @@ public class LigneDemande {
     @ManyToOne
     private Destinataire destinataire;
     private String description;
-
+    private String decharge;
+    @Enumerated(value = EnumType.STRING)
+    private EtatLigne etat ;
+    @Enumerated(value = EnumType.STRING)
+    private TypeLivraison typeLivraison ;
+    private Long dureeSi;
+    private Long dureeLogistique;
 }

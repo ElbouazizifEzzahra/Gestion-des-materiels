@@ -20,21 +20,19 @@ import java.util.Map;
 @Controller
 @RequestMapping("/demandes")
 @AllArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class DemandeController {
 
      private final DemandeServiceImpl demandeService;
-
      private final DemandeQueryServiceImp demandeQueryServiceImp;
-
-
-
     @PreAuthorize("hasAuthority('E')")
     @PostMapping("/add")
     public ResponseEntity<Demande> ajouterDemande(@RequestBody Demande demande) {
         Demande saved = demandeService.addDemande(demande);
         return ResponseEntity.ok(saved);
     }
+    @PreAuthorize("hasAuthority('E')")
     @GetMapping("/{id}")
     public ResponseEntity<List<Demande>>demandes(@PathVariable Long id){
         return ResponseEntity.ok( demandeQueryServiceImp.demandesByUser(id));
@@ -50,18 +48,22 @@ public class DemandeController {
         return ResponseEntity.ok(demades);
     }
 
-    @PreAuthorize("hasAuthority('ESI')")
+   @PreAuthorize("hasAuthority('ESI')")
     @PatchMapping("/Update-Etat/{id}")
     public ResponseEntity<?>update(@PathVariable Long id,@RequestParam Etat etat){
         demandeService.update(id,etat);
         return ResponseEntity.ok(Map.of("message","mise a jour avec succes")) ;
 
     }
-
+    @PreAuthorize("hasAnyAuthority('ESI', 'ADMIN')")
     @GetMapping("/demandes")
     public ResponseEntity<List<Demande>>demandes(){
         List<Demande>demades=demandeQueryServiceImp.demandes();
         return ResponseEntity.ok(demades);
     }
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?>delete(@PathVariable Long id){
+        demandeService.delete(id);
+        return ResponseEntity.ok(Map.of("message","supprime avec succes"));
+    }
 }

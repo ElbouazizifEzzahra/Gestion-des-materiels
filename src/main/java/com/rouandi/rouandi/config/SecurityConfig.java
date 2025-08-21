@@ -17,6 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -34,21 +39,21 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain FilterChain(HttpSecurity http, JwtAuthentificationFilter jwtAuthenticationFilter) throws Exception{
         return http
+
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
-                        /*.requestMatchers("/demandes/**").hasAnyAuthority("ADMIN","ESI","E")*/
-                        .requestMatchers("/demandes/**").permitAll()
-                        .requestMatchers("/materiel/**").permitAll()
-                        //.requestMatchers("/materiel/**").hasAuthority("ADMIN")
-                       // .requestMatchers("/user/**").hasAuthority("ADMIN")
-                        .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/lignes-demandes/**").hasAuthority("E")
+                        .requestMatchers("/demandes/**").hasAnyAuthority("ADMIN","ESI","E")
+                        /*.requestMatchers("/demandes/**").permitAll()
+                        .requestMatchers("/materiel/**").permitAll()*/
+                        .requestMatchers("/materiel/**").hasAnyAuthority("ADMIN","E")
+                       .requestMatchers("/user/**").hasAnyAuthority("ADMIN","ESI","E")
+                        //.requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/lignes-demandes/**").hasAnyAuthority("ESI","E")
                         .requestMatchers("/destinataire/**").hasAuthority("ADMIN")
-                        /*.requestMatchers("/auth/si/**").hasAuthority("ROLE_ESI")
-                        .requestMatchers("/auth/user/**").hasAuthority("ROLE_E")
-                        .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN")*/
-
+                        .requestMatchers("/decharges/**").hasAnyAuthority("ADMIN","ESI","E")
+                        .requestMatchers("/uplaods/**").hasAnyAuthority("ADMIN","ESI","E")
                         .anyRequest().authenticated()
 
                 )
@@ -80,5 +85,16 @@ public class SecurityConfig  {
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

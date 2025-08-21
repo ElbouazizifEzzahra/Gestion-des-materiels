@@ -11,7 +11,9 @@ public class DestinataireMapper {
         d.setPrenom(dto.getPrenomDestinataire());
         d.setEmail(dto.getEmailDestinataire());
         d.setProjet(dto.getProjetDestinataire());
+        d.setFonction(dto.getFonctionDestinataire());
         d.setType(Type.valueOf(dto.getTypeDestinataire().toUpperCase()));
+        d.setFonction(dto.getFonctionDestinataire());
         return d;
     }
 

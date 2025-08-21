@@ -14,14 +14,16 @@ import java.util.Optional;
 @Transactional
 @Repository
 public interface MaterielRepository extends JpaRepository<Materiel,Long> {
-
+    @Query("SELECT m FROM Materiel m WHERE m.idMateriel = :id")
+    Materiel findByIdMateriel(@Param("id") Long id);
 
  List<Materiel> findByNomMaterielStartingWithIgnoreCase(String prefix);
     List<Materiel> findMaterielByNomMaterielAndTypeMateriel(String nom,String type );
     void deleteMaterielByIdMateriel(Long id);
     boolean existsMaterielByIdMateriel(Long id);
     Optional<Materiel> findByNomMaterielAndTypeMateriel(String nom, String type);
-    Optional<Materiel> findByIdMateriel(Long id);
+    Optional<Materiel> findByNomMateriel(String nom);
+    Optional<Materiel> findById(Long idMateriel);
    List<Materiel>findMaterielByNomMateriel(String nom);
  List<Materiel> findMaterielByTypeMateriel(String type);
     @Modifying

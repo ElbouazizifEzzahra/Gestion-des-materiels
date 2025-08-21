@@ -32,6 +32,12 @@ public interface DemandeRepository extends JpaRepository<Demande,Long> {
 
     List<Demande> findByCreateur_IdAndDate(Long id, Date date);
     List<Demande> findByDateAndEtat(Date date, Etat etat);
+
+    @Override
+    boolean existsById(Long aLong);
+
+    void deleteDemandeByIdDemande(Long id);
+
     Demande findDemandeByIdDemande(Long id);
     @Modifying
     @Query("UPDATE Demande d SET d.etat = :etat WHERE d.idDemande = :id")

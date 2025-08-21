@@ -9,16 +9,23 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LigneDemandeRequestDTO {
+    private Integer fileIndex;
+
     private int quantite;
+    private Long materielId;
     private String nomMateriel;
     private String typeMateriel;
     private String description;
-    private String ficheTechnique;
+    private String decharge;
     private String nomDestinataire;
+    private String fonctionDestinataire;
     private String typeDestinataire;
     private String prenomDestinataire;
     private String emailDestinataire;
     private String projetDestinataire;
+    private String ficheTechnique;
+    private String etat;
+    private String typeLivraision;
 
 
 }

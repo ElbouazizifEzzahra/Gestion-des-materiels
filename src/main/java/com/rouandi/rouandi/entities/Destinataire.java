@@ -19,6 +19,7 @@ public class Destinataire {
     private String nom;
     private String prenom;
     private String email;
+    private String fonction;
     private String projet;
     @Enumerated(value= EnumType.STRING)
     private Type type;

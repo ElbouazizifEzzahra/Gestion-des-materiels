@@ -7,6 +7,7 @@ import com.rouandi.rouandi.entities.Materiel;
 import com.rouandi.rouandi.services.Commande.Materiel.MaterielServiceImpl;
 import com.rouandi.rouandi.services.Query.Materiel.MaterielQueryService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,18 +27,20 @@ public class MaterielController {
         this.materielService = materielService;
         this.materielQueryService = materielQueryService;
     }
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<MaterielResponseDTO> ajouterMateriel(@RequestBody MaterielRequestDTO materielRequestDTO){
         Materiel materiel =MaterielMapper.fromDTO(materielRequestDTO);
         Materiel saved= materielService.ajouterMateriel(materiel);
     return ResponseEntity.ok(MaterielMapper.toDTO(saved));
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteMateriel(@PathVariable Long id) {
         materielService.deleteMateriel(id);
         return ResponseEntity.ok(Map.of("message","Matériel supprimé avec succès."));
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/update/{id}")
     public ResponseEntity<?> modifier(
             @PathVariable Long id,

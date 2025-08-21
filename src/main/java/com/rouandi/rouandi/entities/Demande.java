@@ -16,7 +16,7 @@ public class Demande {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long idDemande ;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Africa/Casablanca")
     @Temporal(TemporalType.DATE)
     private Date date;
     @Temporal(TemporalType.TIME)
@@ -27,8 +27,12 @@ public class Demande {
 
     @OneToMany(mappedBy = "demande",cascade = CascadeType.ALL)
     @JsonManagedReference
+    @ToString.Exclude
     private List<LigneDemande> ligneDemandes = new ArrayList<>();
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private User createur;
+
+    private Long duree;
+
 
 }

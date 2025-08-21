@@ -2,6 +2,7 @@ package com.rouandi.rouandi.jwt;
 
 import com.rouandi.rouandi.entities.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -42,12 +43,28 @@ public String generateToken(User user) {
           .setSubject(user.getEmail())
           .claim("id",user.getId())
           .claim("role",user.getRole())
-          .setIssuedAt(new Date(System.currentTimeMillis()))
-          .setExpiration(new Date(System.currentTimeMillis() + 24*60*60*1000))
+          .claim("name", user.getNom())
+          .setIssuedAt(new Date())
+          .setExpiration(new Date(System.currentTimeMillis() +400*60*1000))
           .signWith(getSignKey())
             .compact();
     return token;
 }
+   /* public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000))
+                .signWith(getSignKey())
+                .compact();
+    }
+    public String rotateRefreshToken(String oldRefreshToken) {
+        if (isTokenExpired(oldRefreshToken)) {
+            throw new RuntimeException("Refresh token expiré");
+        }
+        String username = extractUsername(oldRefreshToken);
+        return generateRefreshToken(username);
+    }*/
 
     private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
@@ -68,6 +85,8 @@ public String generateToken(User user) {
     }
 
     private Claims extractAllClaims(String token) {
+        JwtParserBuilder builder = Jwts.parserBuilder().setSigningKey(getSignKey());
+        builder.setAllowedClockSkewSeconds(60);
         return Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
                 .build()
@@ -94,4 +113,9 @@ public String generateToken(User user) {
         final String username= extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
    }
+    /*public Boolean validateRefreshToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }*/
+
 }

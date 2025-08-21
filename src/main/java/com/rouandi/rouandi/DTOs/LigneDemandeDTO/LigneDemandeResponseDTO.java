@@ -16,10 +16,14 @@ public class LigneDemandeResponseDTO {
     private String description;
     private String destinataire;
     private String ficheTechnique;
+    private String decharge;
     private int quantite;
     private String etatDemande;
     private String detailsDemande;
     private Date dateDemande;
     private Time timeDemande;
     private String emailCreateur;
+    private String etat;
+    private String typeLivraision;
+
 }

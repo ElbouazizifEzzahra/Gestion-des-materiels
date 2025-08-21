@@ -7,11 +7,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +25,7 @@ public class Materiel {
     private String nomMateriel;
     @OneToMany(mappedBy = "materiel", cascade = CascadeType.REMOVE)
     @JsonBackReference
+    @ToString.Exclude
     private List<LigneDemande> ligneDemandes = new ArrayList<>();
 
 }

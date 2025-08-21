@@ -16,6 +16,6 @@ public class DestinataireRequest {
     private String prenom;
     private String email;
     private String projet;
-
+    private String fonction;
     private String type;
 }

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 public interface DemandeService {
 
     public Demande addDemande(Demande demande);
+    public void delete(Long id);
     void update(Long id, Etat etat);
-    /*public void deleteDeamnde(Long id);
-    public void updateDeamnde(Long id);*/
+    public void actualiserDureeDemandes();
 
 }

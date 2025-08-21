@@ -14,7 +14,8 @@ public class LigneDemandeMapper {
         LigneDemande ligne = new LigneDemande();
         ligne.setQuantite(dto.getQuantite());
         ligne.setDescription(dto.getDescription());
-        ligne.setFicheTechnique(dto.getFicheTechnique());
+
+       // ligne.setFicheTechnique(dto.getFicheTechnique());
         ligne.setMateriel(materiel);
         ligne.setDemande(demande);
         return ligne;
@@ -31,6 +32,8 @@ public class LigneDemandeMapper {
         ligneDemandeResponseDTO.setDateDemande(ligneDemande.getDemande().getDate());
         ligneDemandeResponseDTO.setQuantite(ligneDemande.getQuantite());
         ligneDemandeResponseDTO.setTimeDemande(ligneDemande.getDemande().getTime());
+        ligneDemandeResponseDTO.setDecharge(ligneDemande.getDecharge());
+        ligneDemandeResponseDTO.setEtat(ligneDemande.getEtat().name());
         ligneDemandeResponseDTO.setFicheTechnique(ligneDemande.getFicheTechnique());
         ligneDemandeResponseDTO.setEmailCreateur(ligneDemande.getDemande().getCreateur().getEmail());
         String details = toutesLignesDeCetteDemande.stream()
