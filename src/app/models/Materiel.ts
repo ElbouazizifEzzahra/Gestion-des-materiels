@@ -1,7 +1,9 @@
 export interface Materiel {
   idMateriel:number;
-  typeMateriel?:String;
-  nomMateriel?: String;
+  typeMateriel?:string;
+  nomMateriel ?: string;
+  displayText?: string;
+  //typesDisponibles?: string[];
 }
 export interface EditForm {
   nom: string;

@@ -1,4 +1,4 @@
-<!--<app-layout>-->
+
 <div class="container mx-auto px-4 py-8">
 
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -51,8 +51,8 @@
       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ materiel.idMateriel }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ materiel.nomMateriel }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ materiel.typeMateriel }}</td>
-          <td cclass="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            <button (click)="deleteMateriel(materiel.idMateriel)"
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <button   (click)="openDeleteModal(materiel.idMateriel)"
                     class="text-red-600 hover:text-red-800 p-2 rounded-full hover:bg-red-100">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -73,7 +73,7 @@
     </div>
   </div>
 
-  <!-- Pagination -->
+<!--  &lt;!&ndash; Pagination &ndash;&gt;
   <div class="mt-4 flex items-center justify-between">
     <div class="text-sm text-gray-400">
       Affichage de <span class="font-medium">{{ materiels.length }}</span> utilisateurs
@@ -90,7 +90,7 @@
       </button>
     </div>
   </div>
-</div>
+</div>-->
 
 @if (showForm) {
 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -145,10 +145,33 @@ Annuler
 </div>
 <div class="flex justify-end space-x-3 mt-6">
 <button (click)="showEditModal.set(false)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">Annuler</button>
-<button (click)="updateMateriel()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Enregistrer</button>
+<button (click)="updateMateriel()" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded">Enregistrer</button>
 </div>
 </div>
 </div>
 </div>
 }
-<!--</app-layout>-->
+
+@if (showDeleteModal()) {
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div class="bg-white rounded-lg p-6 max-w-md w-full">
+<h3 class="text-lg font-bold mb-4">Confirmer la suppression</h3>
+<p class="mb-6">Êtes-vous sûr de vouloir supprimer ce matériel ?</p>
+
+<div class="flex justify-end space-x-3">
+<button
+(click)="closeDeleteModal()"
+class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+>
+Annuler
+</button>
+<button
+(click)="deleteMateriel()"
+class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+>
+Supprimer
+</button>
+</div>
+</div>
+</div>
+}

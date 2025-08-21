@@ -5,7 +5,8 @@ import {Materiel} from './Materiel';
 export interface LigneDemande {
   id : number;
   description ?: string;
-  fichTechnique?: string;
+  decharge ?: string;
+  ficheTechnique?: string;
   quantite : number;
   demandeId : number;
   destinataireId : number;
@@ -13,5 +14,8 @@ export interface LigneDemande {
   demande: Demande;
   destinataire: Destinataire;
   materiel :Materiel;
-
+  etat: string;
+  dureeSi:number;
+  dureeLogistique:number;
+  typeLivraison: string;
 }

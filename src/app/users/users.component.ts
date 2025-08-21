@@ -2,7 +2,6 @@ import {Component, inject, OnInit, signal} from '@angular/core';
 import { UserService } from '../services/UserService'
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {EditForm, User} from '../models/User';
-import {LayoutComponent} from '../core/layout/layout/layout.component';
 import {LoginService} from '../services/LoginService';
 import {Router} from '@angular/router';
 
@@ -10,8 +9,7 @@ import {Router} from '@angular/router';
   selector: 'app-users',
   imports: [
     ReactiveFormsModule,
-    FormsModule,
-    LayoutComponent
+    FormsModule
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -22,7 +20,8 @@ export class UsersComponent implements OnInit {
   isLoading = true;
   showForm = false;
   userForm!: FormGroup;
-
+  showDeleteModal = signal<boolean>(false);
+  ToDelete = signal<number | null>(null);
   private user = inject(UserService);
 
   selectedUser = signal<User | null>(null);
@@ -87,9 +86,10 @@ export class UsersComponent implements OnInit {
           this.userForm.reset();
           this.showForm = false;
           this.isLoading = false;
+          this.showSuccess('user ajouté avec succès');
         },
         error: (err) => {
-          console.error('Erreur:', err);
+          this.showError('Erreur');
           this.isLoading = false;
         }
       });
@@ -108,42 +108,9 @@ export class UsersComponent implements OnInit {
     });
   }
 
- /* updateUser(): void {
-    const id = this.selectedUser()?.id;
-    if (!id) return;
-
-    const form = this.editForm();
-    this.user.updateUser(id, form.nom ,form.prenom,form.email,form.role,form.site,form.societe,form.projet, form.fonctionalite,form.numeroTelephone,form.code).subscribe({
-      next: (updatedUser) => {
-
-        const index = this.users.findIndex(u => u.id === id);
-        if (index !== -1) {
-          this.users[index] = {
-            ...this.users[index],
-            nom: form.nom,
-            prenom: form.prenom,
-            email:form.email,
-            role:form.role,
-            site:form.site,
-            societe:form.societe,
-            projet:form.projet,
-            fonctionalite:form.fonctionalite,
-            numeroTelephone:form.numeroTelephone,
-            code:form.code
-          };
-        }
-        this.showEditModal.set(false);
-
-      },
-
-    });
-  }
-*/
 
   updateUser(): void {
     const token = this.loginService.getToken();
-    console.log('Token actuel:', token);
-
     const id = this.selectedUser()?.id;
     if (!id) {
       console.error('ID utilisateur manquant');
@@ -152,8 +119,6 @@ export class UsersComponent implements OnInit {
 
 
     const form = this.editForm();
-    console.log('Envoi des données:', form);
-
     this.user.updateUser(
       id,
       form.nom || '',
@@ -174,11 +139,11 @@ export class UsersComponent implements OnInit {
           this.users[index] = {...this.users[index], ...form};
         }
         this.showEditModal.set(false);
-        alert('Modification réussie !');
+       this.showSuccess('Modification réussie !');
       },
       error: (err) => {
         console.error('Erreur:', err);
-        alert(`Échec de la modification : ${err.message}`);
+       this.showError('Échec de la modification ');
       }
     });
   }
@@ -187,13 +152,41 @@ export class UsersComponent implements OnInit {
       this.user.deleteUser(id).subscribe({
         next: () => {
           this.users = this.users.filter(m => m.id !== id);
-          console.log('user supprimé avec succès');
+          this.showSuccess('user supprimé avec succès');
         },
         error: (err) => {
-          console.error('Erreur lors de la suppression:', err);
+        this.showError('Erreur lors de la suppression');
         }
       });
     }
+  }  deleteMateriel(): void {
+    const id = this.ToDelete();
+    if (id === null) return;
+
+    this.user.deleteUser(id).subscribe({
+      next: () => {
+        this.showSuccess('Supprimé avec succès');
+
+        this.user.getUsers().subscribe(data => {
+          this.users = Array.isArray(data) ? data : [];
+        });
+        this.closeDeleteModal();
+      },
+      error: () => {
+        this.showError('Échec de la suppression');
+        this.closeDeleteModal();
+      }
+    });
+  }
+
+  openDeleteModal(id: number): void {
+    this.ToDelete.set(id);
+    this.showDeleteModal.set(true);
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+    this.ToDelete.set(null);
   }
   openEditModal(user: User): void {
     this.selectedUser.set(user);
@@ -210,5 +203,57 @@ export class UsersComponent implements OnInit {
       code: user.code as string
     });
     this.showEditModal.set(true);
+  }
+  filterUsersFront(): void {
+    if (!this.searchTerm) {
+
+      this.user.getUsers().subscribe({
+        next: (data) => {
+          this.users = Array.isArray(data) ? data : [];
+        },
+        error: (err) => {
+          console.error({err: 'Erreur:'}, err);
+        }
+      });
+      return;
+    }
+
+    const term = this.searchTerm.toLowerCase();
+    this.users = this.users.filter(user =>
+      (user.nom && user.nom.toLowerCase().includes(term)) ||
+      (user.prenom && user.prenom.toLowerCase().includes(term)) ||
+      (user.email && user.email.toLowerCase().includes(term)) ||
+      (user.role && user.role.toLowerCase().includes(term)) ||
+      (user.site && user.site.toLowerCase().includes(term)) ||
+      (user.societe && user.societe.toLowerCase().includes(term)) ||
+      (user.projet && user.projet.toLowerCase().includes(term)) ||
+      (user.fonctionalite && user.fonctionalite.toLowerCase().includes(term)) ||
+      (user.numeroTelephone && user.numeroTelephone.includes(term)) ||
+      (user.code && user.code.includes(term))
+    );
+  }
+
+  onSearchInput(): void {
+    this.filterUsersFront();
+  }
+  showSuccess(message: string): void {
+    this.showNotification(message, 'bg-green-500');
+  }
+
+  showError(message: string): void {
+    this.showNotification(message, 'bg-red-500');
+  }
+
+
+  private showNotification(message: string, bgClass: string): void {
+    const notification = document.createElement('div');
+    notification.innerHTML = `
+      <div class="fixed justify-center top-4 right-4 p-4 rounded-md text-white ${bgClass} shadow-lg">
+        ${message}
+      </div>
+    `;
+    document.body.appendChild(notification);
+
+    setTimeout(() => notification.remove(), 3000);
   }
 }

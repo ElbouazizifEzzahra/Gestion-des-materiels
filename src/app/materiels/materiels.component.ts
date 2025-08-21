@@ -3,12 +3,12 @@ import {MaterielService} from '../services/MaterielService';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {Materiel,EditForm} from '../models/Materiel';
-import {LayoutComponent} from '../core/layout/layout/layout.component';
+
 
 
 @Component({
   selector: 'app-materiels',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, LayoutComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   standalone: true,
   templateUrl: './materiels.component.html',
   styleUrl: './materiels.component.css'
@@ -19,7 +19,8 @@ export class MaterielsComponent {
   materiels: any[] = [];
   isLoading = true;
  materielForm!: FormGroup;
-
+  showDeleteModal = signal<boolean>(false);
+  materielToDelete = signal<number | null>(null);
   private materiel = inject(MaterielService);
 
   selectedMateriel = signal<Materiel | null>(null);
@@ -58,14 +59,34 @@ export class MaterielsComponent {
   }
 
 
-  deleteMateriel(id: number) {
-    if (confirm('Êtes-vous sûr ?')) {
-      this.materiel.deleteMateriel(id).subscribe({
-        next: () => this.showSuccess('Supprimé avec succès'),
-        error: () => this.showError('Échec de la suppression')
-      });
+  deleteMateriel(): void {
+    const id = this.materielToDelete();
+    if (id === null) return;
 
-    }
+    this.materiel.deleteMateriel(id).subscribe({
+      next: () => {
+        this.showSuccess('Supprimé avec succès');
+
+        this.materiel.getMateriels().subscribe(data => {
+          this.materiels = Array.isArray(data) ? data : [];
+        });
+        this.closeDeleteModal();
+      },
+      error: () => {
+        this.showError('Échec de la suppression');
+        this.closeDeleteModal();
+      }
+    });
+  }
+
+  openDeleteModal(id: number): void {
+    this.materielToDelete.set(id);
+    this.showDeleteModal.set(true);
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+    this.materielToDelete.set(null);
   }
   openAddForm(): void {
     this.showForm = true;
@@ -135,12 +156,12 @@ export class MaterielsComponent {
     this.showNotification(message, 'bg-green-500');
   }
 
-  // Méthode pour les erreurs
+
   showError(message: string): void {
     this.showNotification(message, 'bg-red-500');
   }
 
-  // Méthode générique
+
   private showNotification(message: string, bgClass: string): void {
     const notification = document.createElement('div');
     notification.innerHTML = `

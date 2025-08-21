@@ -4,23 +4,32 @@ export interface User {
   prenom: string;
   email: string;
   role: string;
-  numeroTelephone?: string;
-  code?: string;
-  fonctionalite?: string;
-  projet?: string;
+  numeroTelephone: string;
+  code: string;
+  fonctionalite: string;
+  projet: string;
   site?: string;
   societe?: string;
+  password?: string;
 
 }
 export interface EditForm {
-  nom?:string;
-  prenom?:string;
-  email?:string;
-  role?:string;
-  numeroTelephone?:string;
-  code?:string;
-  fonctionalite?:string;
-  projet?:string;
-  site?:string;
-  societe?:string;
+  nom:string;
+  prenom:string;
+  email:string;
+  role:string;
+  numeroTelephone:string;
+  code:string;
+  fonctionalite:string;
+  projet:string;
+  site:string;
+  societe:string;
+
+
+}
+
+export interface PasswordForm {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
 }

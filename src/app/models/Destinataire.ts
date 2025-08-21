@@ -3,6 +3,7 @@ export interface Destinataire{
   email?: string;
   nom ?: string;
   prenom ?: string;
+  fonction ?: string;
   projet ?: string;
-  type?: string;
+  type: 'MO' | 'EMPLOYE';
 }

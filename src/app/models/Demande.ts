@@ -8,5 +8,6 @@ export interface Demande {
   date  ?: string ;
   createurId : number;
   createur : User;
-  ligneDemandes : LigneDemande[]
+  ligneDemandes : LigneDemande[];
+  duree:number;
 }

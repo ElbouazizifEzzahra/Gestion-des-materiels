@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import { Router } from '@angular/router';
 import { LoginService } from '../services/LoginService';
 import { CommonModule } from '@angular/common';
+import {jwtDecode} from 'jwt-decode';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,9 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  welcomeMessage: string | null = null;
   errorMessage: string = '';
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -21,24 +24,81 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['fz@email.com', [Validators.required, Validators.email]],
-      password: ['1234', Validators.required]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      rememberMe: [false]
     });
   }
 
-  onLogin() {
-    if (this.loginForm.invalid) return;
+  get email() { return this.loginForm.get('email'); }
+  get password() { return this.loginForm.get('password'); }
 
-    const { email, password } = this.loginForm.value;
-    console.log('Envoi des identifiants:', { email, password });
+  onLogin() {
+    this.loginForm.markAllAsTouched();
+    if (this.loginForm.invalid) {
+      this.errorMessage = 'Veuillez corriger les erreurs dans le formulaire';
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const { email, password, rememberMe } = this.loginForm.value;
 
     this.loginService.login(email, password).subscribe({
-      next: () => {
-        this.router.navigate(['/users']);
+      next: (response) => {
+
+        this.isLoading = false;
+
+        if (rememberMe) {
+          sessionStorage.setItem('rememberedEmail', email);
+        }
+
+
+        const token = sessionStorage.getItem('authToken');
+        if (token) {
+          try {
+            const decodedToken: any = jwtDecode(token);
+            const role = decodedToken.role;
+            this.loginService.role = role;
+            switch (role) {
+              case 'ADMIN':
+                this.router.navigate(['/admin']);
+                break;
+              case 'ESI':
+                this.router.navigate(['/service-informatique']);
+                break;
+              case 'E':
+                this.router.navigate(['/employe']);
+                break;
+              default:
+                this.router.navigate(['/acces-interdit']);
+            }
+          } catch (err) {
+            console.error('Erreur de décodage du token :', err);
+            this.router.navigate(['/acces-interdit']);
+          }
+        }
       },
       error: (err) => {
-        this.errorMessage = err.message;
-        console.error('Erreur complète:', err);
+        this.isLoading = false;
+        this.errorMessage = err.error?.message || 'Échec de la connexion. Veuillez réessayer.';
+        console.error('Erreur de connexion:', err);
       }
     });
-  }}
+  }
+
+  ngOnInit() {
+    const rememberedEmail = sessionStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+      this.loginForm.patchValue({
+        email: rememberedEmail,
+        rememberMe: true
+      });
+    }
+
+  }
+
+
+
+}

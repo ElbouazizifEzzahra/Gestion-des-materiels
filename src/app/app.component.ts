@@ -1,16 +1,17 @@
-import {Component, NgModule} from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import {Component, NgModule, OnInit} from '@angular/core';
+import { RouterOutlet} from '@angular/router';
 
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet],
   standalone: true,
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 
-export class AppComponent {
+export class AppComponent  {
+  title :string|null=null;
 
 }

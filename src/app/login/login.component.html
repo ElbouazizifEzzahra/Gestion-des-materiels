@@ -1,55 +1,90 @@
-<div class="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-  <div class="sm:mx-auto sm:w-full sm:max-w-md">
-    <h1 class="text-center text-3xl font-extrabold text-gray-900 mb-2">Connexion</h1>
-    <p class="text-center text-sm text-gray-600">Accédez à votre espace </p>
-  </div>
+<div class="min-h-screen flex items-center justify-center bg-gray-50">
+  <!-- Conteneur principal avec bordure rouge subtile -->
+  <div class="w-full max-w-4xl mx-4 bg-white rounded-2xl shadow-xl overflow-hidden md:flex md:mx-8 border-2 border-red-100">
+    <!-- Section image (côté gauche) avec fond gris rougeâtre -->
+    <div class="md:w-1/2 bg-red-600 flex items-center justify-center p-8">
+      <img src="assets/images/login.png" alt="Login Image" class="w-full h-auto max-h-96 object-contain">
+    </div>
 
-  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input id="email" type="email" formControlName="email"
-                 class="form-control"
-                 [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+    <!-- Section formulaire (côté droit) -->
+    <div class="md:w-1/2 p-8 sm:p-10">
+      <!-- En-tête avec accent rouge -->
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Connexion à votre espace</h1>
+        <p class="mt-2 text-gray-600">Entrez vos identifiants pour accéder à votre compte</p>
+        <div class="mt-4 h-1 w-20 bg-red-600 mx-auto rounded-full"></div>
+      </div>
 
+      <!-- Formulaire -->
+      <form class="space-y-6" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <!-- Champ Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Adresse email</label>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <input id="email" name="email" type="email" autocomplete="email" required
+                   formControlName="email"
+                   class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-300 focus:border-red-500 placeholder-gray-400"
+                   placeholder="exemple@email.com"
+                   [class.border-red-500]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          </div>
           @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
-          <div class="invalid-feedback">
+          <p class="mt-2 text-sm text-red-600">
             @if (loginForm.get('email')?.errors?.['required']) {
-          <div>Email requis</div>
+          <span>L'email est requis</span>
           }
           @if (loginForm.get('email')?.errors?.['email']) {
-          <div>Format d'email invalide</div>
+          <span>Veuillez entrer un email valide</span>
           }
-          </div>
+          </p>
           }
         </div>
 
-        <div class="form-group">
-          <label for="password">Mot de passe</label>
-          <input id="password" type="password" formControlName="password"
-                 class="form-control"
-                 [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-
+        <!-- Champ Mot de passe -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <input id="password" name="password" type="password" autocomplete="current-password" required
+                   formControlName="password"
+                   class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-300 focus:border-red-500 placeholder-gray-400"
+                   placeholder="••••••••"
+                   [class.border-red-500]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          </div>
           @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
-          <div class="invalid-feedback">
+          <p class="mt-2 text-sm text-red-600">
             @if (loginForm.get('password')?.errors?.['required']) {
-          <div>Mot de passe requis</div>
+          <span>Le mot de passe est requis</span>
           }
-          </div>
+          </p>
           }
         </div>
 
+
+
+        <!-- Message d'erreur -->
         @if (errorMessage) {
-        <div class="alert alert-danger">
-        {{ errorMessage }}
-        </div>
+        <div class="rounded-md bg-red-100 p-4 border border-red-200">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800">{{ errorMessage }}</h3>
+              </div>
+            </div>
+          </div>
         }
 
-        <button type="submit" class="btn btn-primary">
-          Se connecter
-        </button>
+        <div>
+          <button type="submit"
+                  [disabled]="loginForm.invalid"
+                  class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+            Se connecter
+          </button>
+        </div>
       </form>
+
 
     </div>
   </div>

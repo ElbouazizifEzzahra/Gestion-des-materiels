@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable} from 'rxjs'
-import { User } from '../models/User';
+import {EditForm, User} from '../models/User';
 
 @Injectable({providedIn:'root'})
 export class UserService {
@@ -52,9 +52,27 @@ export class UserService {
       numeroTelephone, code
     });
   }
+  findUser(id : number):Observable<any>{
+    return this.http.get(`${this.url}/${id}`);
+  }
   filterUsers(prefix: string): Observable<UserService[]> {
     return this.http.get<UserService[]>(`${this.url}/filter`, {
       params: { nom: prefix }
     });
   }
+
+  updateUser2(id: number, userData: Partial<User>): Observable<User> {
+    return this.http.put<User>(`${this.url}/update/${id}`, userData);
+  }
+  updatePassword(userId: number, currentPassword: string, newPassword: string): Observable<any> {
+    return this.http.patch(`${this.url}/${userId}/password`, {
+      currentPassword,
+      newPassword
+    });
+  }
+
 }
+
+
+
+
