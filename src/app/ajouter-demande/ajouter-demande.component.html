@@ -1,0 +1,130 @@
+<div class="max-w-5xl mx-auto p-4 sm:p-6 bg-white shadow-lg rounded-xl">
+  <h2 class="text-2xl sm:text-3xl font-bold text-red-600 mb-4 sm:mb-6 text-center">Nouvelle demande de matériel</h2>
+
+  <form #demandeForm="ngForm" class="space-y-4 sm:space-y-6">
+    <!-- SECTION MATÉRIEL -->
+    <div class="bg-gray-50 p-4 sm:p-6 rounded-md shadow">
+      <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-700">Ajouter un matériel</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+        <div class="col-span-1">
+          <label class="block text-sm font-medium text-gray-700">Matériel</label>
+          <select [(ngModel)]="newItem.materiel" name="materiel" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            <option [ngValue]="null">-- Sélectionner un matériel --</option>
+            @for (mat of materiels; track mat.idMateriel) {
+            <option [ngValue]="mat">
+            {{ mat.nomMateriel }} ({{ mat.typeMateriel }})
+            </option>
+            }
+          </select>
+        </div>
+
+        <div class="col-span-1">
+          <label class="block text-sm font-medium text-gray-700">Quantité</label>
+          <input type="number" [(ngModel)]="newItem.quantite" name="quantite" min="1" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+        </div>
+
+        <div class="col-span-1 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700">Description</label>
+          <textarea rows="3" [(ngModel)]="newItem.description" name="description" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
+        </div>
+
+        <div class="col-span-1 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700">Fiche technique</label>
+          <input type="file" #fileInput (change)="onFileSelected($event)" [disabled]="!newItem.materiel"
+                 accept=".pdf"
+                 class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION DESTINATAIRE -->
+    <div class="bg-gray-50 p-4 sm:p-6 rounded-md shadow">
+      <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-700">Informations du destinataire</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+        <div class="col-span-1">
+          <label class="block text-sm font-medium text-gray-700">Type</label>
+          <select [(ngModel)]="newItem.typeDestinataire" name="typeDestinataire" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            <option value="EMPLOYE">Employé</option>
+            <option value="MO">MO</option>
+          </select>
+        </div>
+
+        <div class="col-span-1">
+          <label class="block text-sm font-medium text-gray-700">Nom</label>
+          <input type="text" [(ngModel)]="newItem.nomDestinataire" name="nomDestinataire" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+        </div>
+
+        <div class="col-span-1">
+          <label class="block text-sm font-medium text-gray-700">Prénom</label>
+          <input type="text" [(ngModel)]="newItem.prenomDestinataire" name="prenomDestinataire" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+        </div>
+
+        <div class="col-span-1">
+          <label class="block text-sm font-medium text-gray-700">Email</label>
+          <input type="email" [(ngModel)]="newItem.emailDestinataire" name="emailDestinataire" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+        </div>
+
+        <div class="col-span-1">
+          <label class="block text-sm font-medium text-gray-700">Fonction</label>
+          <input type="text" [(ngModel)]="newItem.fonctionDestinataire" name="fonctionDestinataire" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+        </div>
+
+        <div class="col-span-1">
+          <label class="block text-sm font-medium text-gray-700">Projet</label>
+          <input type="text" [(ngModel)]="newItem.projetDestinataire" name="projetDestinataire" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-right">
+      <button type="button" (click)="addItem()" [disabled]="!demandeForm.form.valid || !newItem.materiel"
+              class="w-full sm:w-auto inline-flex justify-center items-center px-4 sm:px-5 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
+        + Ajouter à la demande
+      </button>
+    </div>
+  </form>
+
+  <!-- LISTE DES ARTICLES -->
+  <div class="mt-8 sm:mt-10">
+    <h3 class="text-lg sm:text-xl font-semibold text-gray-700 mb-3 sm:mb-4">Vérification avant envoi</h3>
+
+    @if (selectedItems.length > 0) {
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-200 bg-white shadow rounded-md">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="p-2 sm:p-3 text-left text-sm sm:text-base">Matériel</th>
+            <th class="p-2 sm:p-3 text-left text-sm sm:text-base">Type</th>
+            <th class="p-2 sm:p-3 text-left text-sm sm:text-base">Quantité</th>
+            <th class="p-2 sm:p-3 text-left text-sm sm:text-base">Destinataire</th>
+            <th class="p-2 sm:p-3 text-center text-sm sm:text-base">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of selectedItems; track $index; let i = $index) {
+    <tr class="border-t">
+      <td class="p-2 sm:p-3 text-sm sm:text-base">{{ item.nomMateriel }}</td>
+      <td class="p-2 sm:p-3 text-sm sm:text-base">{{ item.typeMateriel }}</td>
+      <td class="p-2 sm:p-3 text-sm sm:text-base">{{ item.quantite }}</td>
+      <td class="p-2 sm:p-3 text-sm sm:text-base">{{ item.nomDestinataire }} {{ item.prenomDestinataire }}</td>
+      <td class="p-2 sm:p-3 text-center">
+        <button (click)="removeItem(i)" class="text-red-600 hover:text-red-800 text-sm sm:text-base">Supprimer</button>
+      </td>
+    </tr>
+    }
+    </tbody>
+  </table>
+</div>
+
+<div class="text-right mt-4 sm:mt-6">
+  <button class="w-full sm:w-auto px-4 sm:px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition" (click)="submitDemande()">
+    ✅ Envoyer la demande
+  </button>
+</div>
+    } @else {
+    <p class="text-gray-500 italic text-center">Aucun matériel ajouté pour le moment.</p>
+    }
+  </div>
+</div>
