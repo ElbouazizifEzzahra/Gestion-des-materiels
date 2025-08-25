@@ -3,7 +3,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rouandi.rouandi.DTOs.DechargeDTO.DechargeDTO;
 import com.rouandi.rouandi.DTOs.LigneDemandeDTO.LigneDemandeRequestDTO;
-import com.rouandi.rouandi.entities.Etat;
 import com.rouandi.rouandi.entities.EtatLigne;
 import com.rouandi.rouandi.entities.TypeLivraison;
 import com.rouandi.rouandi.services.Commande.Demande.DemandeService;
@@ -43,7 +42,6 @@ public class LigneDemandeController {
     ) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            // parse JSON to list of DTOs (ou maps puis convert)
             List<LigneDemandeRequestDTO> lignes = mapper.readValue(
                     lignesJson,
                     new TypeReference<List<LigneDemandeRequestDTO>>() {}

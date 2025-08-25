@@ -22,21 +22,7 @@ import java.util.function.Function;
 public class JwtUtil {
   public static final String SECRET = "5367566859703373367639792F423F452848284D6251655468576D5A71347437";
 
-/*    public String generateToken(String email,String role) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role);
-        return createToken(claims, email);
-    }
 
-    private String createToken(Map<String, Object> claims, String email) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
-                .signWith(getSignKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }*/
 public String generateToken(User user) {
   String token =Jwts
           .builder()
@@ -50,21 +36,7 @@ public String generateToken(User user) {
             .compact();
     return token;
 }
-   /* public String generateRefreshToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000))
-                .signWith(getSignKey())
-                .compact();
-    }
-    public String rotateRefreshToken(String oldRefreshToken) {
-        if (isTokenExpired(oldRefreshToken)) {
-            throw new RuntimeException("Refresh token expiré");
-        }
-        String username = extractUsername(oldRefreshToken);
-        return generateRefreshToken(username);
-    }*/
+
 
     private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
@@ -113,9 +85,6 @@ public String generateToken(User user) {
         final String username= extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
    }
-    /*public Boolean validateRefreshToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }*/
+ 
 
 }

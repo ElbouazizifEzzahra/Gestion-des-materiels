@@ -72,20 +72,7 @@ public class DemandeServiceImpl implements DemandeService {
             );
         }
     }
- /*   @Override
-    public void actualiserDureeDemandes() {
-        List<Demande> demandes = demandeRepository.findAll();
-        Date today = new Date();
 
-        for (Demande d : demandes) {
-            if (!d.getEtat().equals(Etat.TRAITE)) {
-                long diffInMillies = today.getTime() - d.getDate().getTime();
-                long diffJours = diffInMillies / (24 * 60 * 60 * 1000);
-                d.setDuree(diffJours);
-                demandeRepository.save(d);
-            }
-        }
-    }*/
     @Override
     @Transactional
     public void actualiserDureeDemandes() {

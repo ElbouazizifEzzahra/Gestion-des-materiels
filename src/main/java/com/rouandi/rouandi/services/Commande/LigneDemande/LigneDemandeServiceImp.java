@@ -341,11 +341,6 @@ public class LigneDemandeServiceImp implements LigneDemandeService {
 
         Destinataire dest = ligne.getDestinataire();
         Materiel mat = ligne.getMateriel();
-/*
-        String[] caract = {
-                mat.getNomMateriel() + " " + mat.getTypeMateriel() + " - " + ligne.getQuantite() + " unité(s)",
-                "Description : " + ligne.getDescription()
-        };*/
 
         return new DechargeDTO(
                 dest.getNom(),

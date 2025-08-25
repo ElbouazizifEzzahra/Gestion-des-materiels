@@ -41,17 +41,7 @@ public class AuthService {
 
             String token = jwtUtil.generateToken(user);
             String role = jwtUtil.extractRole(token);
-/*
-            String redirect = switch (role) {
-                case "E" -> "/employe";
-                case "ESI" -> "/employe_service_informatique";
-                case "ADMIN" -> "/admin";
-                default -> "/acces/denied";
-            };
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("token", token);
-            response.put("redirect", redirect);*/
             Map<String, String> response = new HashMap<>();
             response.put("token", token);
 

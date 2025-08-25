@@ -51,14 +51,7 @@ public class MaterielController {
         return ResponseEntity.ok(Map.of("message", "bien fait"));
     }
 
-/* @GetMapping("/filter")
-    public ResponseEntity<List<Materiel>> filter(
-                                                @RequestParam (required = false) String type,
-                                                 @RequestParam (required = false) String nom
-                                                                                                ){
-         List<Materiel> materiels=materielQueryService.filter(nom,type);
-         return ResponseEntity.ok(materiels) ;
- }*/
+
 @GetMapping("/filter")
 public ResponseEntity<List<Materiel>> filter(
         @RequestParam(required = false) String nom) {

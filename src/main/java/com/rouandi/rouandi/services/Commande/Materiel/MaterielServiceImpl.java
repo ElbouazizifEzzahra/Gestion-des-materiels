@@ -50,27 +50,13 @@ public class MaterielServiceImpl implements MaterielService {
                 materiel.setTypeMateriel(type);
             }
 
-            // Sauvegarde et retourne l'objet mis à jour
+
             return materielRepository.save(materiel);
         }
 
-        // Si l'objet n'existe pas, on peut soit :
-        // - lever une exception (recommandé)
-        // - soit retourner null (moins conseillé)
+
         throw new RuntimeException("Le matériel avec l'ID " + id + " n'existe pas.");
     }
 
- /*   public void updateMateriel(Long id, String nom, String type) {
 
-        if(materielRepository.existsMaterielByIdMateriel(id))
-        {
-            if(type!=null && nom!=null){
-                materielRepository.updateMaterielByIdAndNomMaterielAndTypeMateriel(id,nom,type);
-            }
-            if(type!=null )
-                materielRepository.updateMaterielByIdAndTypeMateriel(id,type);
-            if(nom!=null)
-                materielRepository.updateMaterielByIdAndNomMateriel(id,nom);
-        }
-    }*/
     }

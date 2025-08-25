@@ -41,7 +41,7 @@ public class UserServiceImp implements UserService {
     public User addUser(User user) {
       String password= Password();
         user.setPassword(password);
-        emailService.sendEmail("elbouazizi.fat.fst@uhp.ac.ma",user.getEmail()," YOUR PASSWORD","your password is : "+user.getPassword()+" "+ "Please log in using this password and make sure to change it within 24 hours.");
+        emailService.sendEmail("elbouazizi.fat.fst@uhp.ac.ma",user.getEmail()," VOTRE MOT DE PASSE","Essayez de vous connecter avec le mot de passe : "+user.getPassword()+" "+ "et changez-le.");
       user.setPassword(encoder.encode(password));
 
       return userRepository.findUserByEmail(user.getEmail())
@@ -107,45 +107,7 @@ public class UserServiceImp implements UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + email));
     }
-    /*@Override
-    @Transactional
-    public void updateUser(Long id, User updatedData) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable avec ID : " + id));
 
-        if (updatedData.getCode() != null)
-            existingUser.setCode(updatedData.getCode());
-
-        if (updatedData.getEmail() != null)
-            existingUser.setEmail(updatedData.getEmail());
-
-        if (updatedData.getFonctionalite() != null)
-            existingUser.setFonctionalite(updatedData.getFonctionalite());
-
-        if (updatedData.getNom() != null)
-            existingUser.setNom(updatedData.getNom());
-
-        if (updatedData.getNumeroTelephone() != null)
-            existingUser.setNumeroTelephone(updatedData.getNumeroTelephone());
-
-        if (updatedData.getPrenom() != null)
-            existingUser.setPrenom(updatedData.getPrenom());
-
-        if (updatedData.getProjet() != null)
-            existingUser.setProjet(updatedData.getProjet());
-
-        if (updatedData.getRole() != null)
-            existingUser.setRole(updatedData.getRole());
-
-        if (updatedData.getSite() != null)
-            existingUser.setSite(updatedData.getSite());
-
-        if (updatedData.getSociete() != null)
-            existingUser.setSociete(updatedData.getSociete());
-
-        userRepository.save(existingUser);
-    }
-*/
     public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();

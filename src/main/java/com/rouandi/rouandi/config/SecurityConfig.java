@@ -45,11 +45,8 @@ public class SecurityConfig  {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/demandes/**").hasAnyAuthority("ADMIN","ESI","E")
-                        /*.requestMatchers("/demandes/**").permitAll()
-                        .requestMatchers("/materiel/**").permitAll()*/
                         .requestMatchers("/materiel/**").hasAnyAuthority("ADMIN","E")
                        .requestMatchers("/user/**").hasAnyAuthority("ADMIN","ESI","E")
-                        //.requestMatchers("/user/**").permitAll()
                         .requestMatchers("/lignes-demandes/**").hasAnyAuthority("ESI","E")
                         .requestMatchers("/destinataire/**").hasAuthority("ADMIN")
                         .requestMatchers("/decharges/**").hasAnyAuthority("ADMIN","ESI","E")
