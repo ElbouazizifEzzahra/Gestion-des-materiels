@@ -20,7 +20,7 @@ import java.util.function.Function;
 @Component
 @Service
 public class JwtUtil {
-  public static final String SECRET = "5367566859703373367639792F423F452848284D6251655468576D5A71347437";
+  public static final String SECRET = ${key_secret};
 
 
 public String generateToken(User user) {
